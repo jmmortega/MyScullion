@@ -1,3 +1,5 @@
+using MyScullion.Features.Main;
+using MyScullion.Services;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,10 +13,25 @@ namespace MyScullion
 		{
 			InitializeComponent();
 
-			MainPage = new MainPage();
+            CustomDependencyService.Register<MenuService>();
+            
+            MainPage = new MasterDetailPage() { Master = new MasterDetailMenu(), Detail = new NavigationPage(new MainView()) };
 		}
 
-		protected override void OnStart ()
+        public static void ChangePresented()
+        {
+            var masterDetail = (MasterDetailPage)App.Current.MainPage;
+            masterDetail.IsPresented = !masterDetail.IsPresented;
+        }
+
+        public static void ChangeDetail(Page page)
+        {
+            var masterDetail = (MasterDetailPage)App.Current.MainPage;
+            masterDetail.Detail = page;
+            ChangePresented();
+        }
+
+        protected override void OnStart ()
 		{
 			// Handle when your app starts
 		}
@@ -27,6 +44,6 @@ namespace MyScullion
 		protected override void OnResume ()
 		{
 			// Handle when your app resumes
-		}
-	}
+		}        
+    }
 }
