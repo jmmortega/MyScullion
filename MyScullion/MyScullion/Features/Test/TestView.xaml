@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyScullion.Features.Test.TestView">
+    <ContentPage.Content>
+        <StackLayout>
+            <Button Text="Insert ingredients" Clicked="InsertIngredientsClicked"/>
+            <Button Text="Insert measures" Clicked="InsertMeasuresClicked"/>
+            
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Insert test" Clicked="InsertMeasuresClicked"/>
+                <Entry x:Name="EntryRows" Placeholder="Number of rows for test"/>
+            </StackLayout>
+            
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,5 +1,6 @@
 using MyScullion.Features.Main;
 using MyScullion.Services;
+using MyScullion.Styles;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -14,9 +15,21 @@ namespace MyScullion
 			InitializeComponent();
 
             CustomDependencyService.Register<MenuService>();
+
+            LoadStyles();
             
             MainPage = new MasterDetailPage() { Master = new MasterDetailMenu(), Detail = new NavigationPage(new MainView()) };
 		}
+
+        private void LoadStyles()
+        {
+            var masterStyle = new MasterDetailStyle();
+            
+            foreach(var element in masterStyle.Resources)
+            {
+                App.Current.Resources.Add(element.Key, element.Value);
+            }
+        }
 
         public static void ChangePresented()
         {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using MyScullion.Features.Main;
+using MyScullion.Features.Test;
 using MyScullion.Services;
 using MyScullion.Services.Databases;
 
@@ -14,8 +15,15 @@ namespace MyScullion.Services
             {
                 new MasterDetailPageMenuItem(typeof(AkavacheService))
                 {
-                    Id = 1,
+                    Id = 10,
                     Title = "Akavache"
+                },
+                new SeparatorMasterDetail(),
+
+                new MasterDetailPageMenuItem(typeof(TestView))
+                {
+                    Id = 20,
+                    Title = "Test database view"
                 }
             };
         }

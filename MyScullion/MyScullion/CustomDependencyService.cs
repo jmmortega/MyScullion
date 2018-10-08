@@ -33,7 +33,7 @@ namespace MyScullion
             var implementationType = typeof(T).GetInterfaces().FirstOrDefault();
             if (instances.ContainsKey(implementationType))
             {
-                return (T)instances[typeof(T)];
+                return (T)instances[implementationType];
             }
             else
             {

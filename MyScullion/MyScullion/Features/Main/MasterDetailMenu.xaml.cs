@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Reflection;
+using System.Linq;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,9 +18,8 @@ namespace MyScullion.Features.Main
         public ListView ListView;
 
         public MasterDetailMenu()
-        {
+        {            
             InitializeComponent();
-
             BindingContext = new MasterDetailPageMasterViewModel();            
         }
 
@@ -50,14 +50,16 @@ namespace MyScullion.Features.Main
             {
                 var menuItem = (MasterDetailPageMenuItem)e.Item;
                 
-                if(menuItem.TargetType.BaseType == typeof(IDatabaseService))
+                if(menuItem.TargetType.GetInterfaces().First() == typeof(IDatabaseService))
                 {
                     ChangeDatabaseServiceType(menuItem.TargetType);
                 }
-                else if(menuItem.TargetType.BaseType == typeof(Page))
+                else if(menuItem.TargetType.BaseType == typeof(ContentPage))
                 {
                     NavigatePage(menuItem.TargetType);
                 }
+
+                (sender as ListView).SelectedItem = null;
             }
         }
         
