@@ -8,7 +8,7 @@
             <Button Text="Insert measures" Clicked="InsertMeasuresClicked"/>
             
             <StackLayout Orientation="Horizontal">
-                <Button Text="Insert test" Clicked="InsertMeasuresClicked"/>
+                <Button Text="Insert test" Clicked="InsertRandomTest"/>
                 <Entry x:Name="EntryRows" Placeholder="Number of rows for test"/>
             </StackLayout>
             

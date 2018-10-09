@@ -1,11 +1,9 @@
 ﻿namespace MyScullion.Models
 {
-    public class Measure
+    public class Measure : BaseModel
     {
         public int IngredientId { get; set; }
-
-        public int MeasureId { get; set; }
-
+       
         public string Description { get; set; }
 
         public double Amount { get; set; }
@@ -16,7 +14,7 @@
 
         public string ToCSV()
         {
-            return $"{IngredientId};{MeasureId};{Description.Trim()};{Amount};{Grams}";
+            return $"{IngredientId};{Id};{Description.Trim()};{Amount};{Grams}";
         }
         
     }

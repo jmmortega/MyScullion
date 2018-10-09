@@ -15,6 +15,8 @@ namespace MyScullion
 			InitializeComponent();
 
             CustomDependencyService.Register<MenuService>();
+            CustomDependencyService.Register<RandomService>();
+            CustomDependencyService.Register<FileEmbedddedService>();
 
             LoadStyles();
             

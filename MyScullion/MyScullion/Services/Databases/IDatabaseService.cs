@@ -1,19 +1,23 @@
-﻿using System;
+﻿using MyScullion.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MyScullion.Services.Databases
 {
     public interface IDatabaseService
     {
-        List<T> GetAll<T>();
+        Task<IEnumerable<T>> GetAll<T>() where T : BaseModel;
 
-        List<T> GetAndFetch<T>(Func<T> restAction);
+        Task<IEnumerable<T>> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel;
 
-        T Get<T>(int id);
+        T Get<T>(int id) where T : BaseModel;
 
-        void Insert<T>(T item);
+        void Insert<T>(T item) where T : BaseModel;
 
-        void Delete<T>(T item);
+        void InsertAll<T>(List<T> items) where T : BaseModel;
+
+        Task<bool> Delete<T>(T item) where T : BaseModel;
     }
 }

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace MyScullion.Models
 {
-    public class Ingredient
-    {
-        public int Id { get; set; }
-
+    public class Ingredient : BaseModel
+    {        
         public string Name { get; set; }
 
         public string Family { get; set; }
