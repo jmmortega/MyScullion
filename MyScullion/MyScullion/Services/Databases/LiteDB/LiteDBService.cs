@@ -19,7 +19,7 @@ namespace MyScullion.Services.Databases.LiteDB
 
         public LiteDBService()
         {
-            database = new LiteDatabase(CustomDependencyService.Get<IPathService>().GetDatabasePath());
+            database = new LiteDatabase(CustomDependencyService.Get<IPathService>().GetDatabasePath("LiteDB"));
             MapModels();
         }
 

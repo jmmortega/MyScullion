@@ -6,6 +6,7 @@ using MyScullion.Services.Databases;
 using MyScullion.Services.Databases.LiteDB;
 using MyScullion.Services.Databases.MonkeyCache;
 using MyScullion.Services.Databases.RawJson;
+using MyScullion.Services.Databases.Realm;
 
 [assembly: Xamarin.Forms.Dependency(typeof(MenuService))]
 namespace MyScullion.Services
@@ -36,6 +37,11 @@ namespace MyScullion.Services
                     Id = 40,
                     Title = "RawJson"
                 },
+                new MasterDetailPageMenuItem(typeof(RealmService))
+                {
+                    Id = 50,
+                    Title = "Realm"
+                }
                 new SeparatorMasterDetail(),
 
                 new MasterDetailPageMenuItem(typeof(TestView))
