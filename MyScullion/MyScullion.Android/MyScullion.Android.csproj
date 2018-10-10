@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;DROID</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
@@ -57,6 +57,9 @@
     <PackageReference Include="MonkeyCache.FileStore">
       <Version>0.1.0.10-beta</Version>
     </PackageReference>
+    <PackageReference Include="Mono.Data.Sqlite.Portable">
+      <Version>1.0.3.5</Version>
+    </PackageReference>
     <PackageReference Include="Realm">
       <Version>3.2.1</Version>
     </PackageReference>
@@ -71,6 +74,9 @@
     <PackageReference Include="Xamarin.Android.Support.v7.MediaRouter" Version="27.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\Shared\DatabaseBase.cs">
+      <Link>Services\DatabaseBase.cs</Link>
+    </Compile>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

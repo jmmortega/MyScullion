@@ -156,6 +156,9 @@
     <PackageReference Include="MonkeyCache.FileStore">
       <Version>0.1.0.10-beta</Version>
     </PackageReference>
+    <PackageReference Include="Mono.Data.Sqlite.Portable">
+      <Version>1.0.3.5</Version>
+    </PackageReference>
     <PackageReference Include="Realm">
       <Version>3.2.1</Version>
     </PackageReference>

@@ -9,6 +9,9 @@ namespace MyScullion.Utils
     {
         private static List<LogEvent> logEvents = new List<LogEvent>();
 
+        public static void Trace(string content) => System.Diagnostics.Debug.WriteLine(content);
+        
+
         public static void Start(string eventName)
         {
             var logEvent = logEvents.FirstOrDefault(x => x.EventName == eventName);
