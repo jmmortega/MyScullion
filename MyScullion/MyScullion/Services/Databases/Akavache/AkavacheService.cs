@@ -28,9 +28,9 @@ namespace MyScullion.Services.Databases
             return localBlobCache.GetObject<T>(typeof(T).Name).FirstOrDefault(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<T>> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
+        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
         {
-            return new List<T>() { await localBlobCache.GetAndFetchLatest(typeof(T).Name, restAction) };                       
+            return localBlobCache.GetAndFetchLatest(typeof(T).Name, restAction);                    
         }
 
         public void Insert<T>(T item) where T : BaseModel

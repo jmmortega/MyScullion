@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="akavache" Version="6.0.27" />
+    <PackageReference Include="MonkeyCache.FileStore" Version="0.1.0.10-beta" />
     <PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
   </ItemGroup>
 

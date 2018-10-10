@@ -79,9 +79,9 @@ namespace MyScullion.Utils
 
             var builder = new StringBuilder();
 
-            foreach(var tuple in TagTime)
+            foreach (var tuple in TagTime)
             {
-                builder.AppendLine($"{tuple}: {actualTick - tuple.Item2}"));
+                builder.AppendLine($"{tuple}: {actualTick - tuple.Item2}");
             }
 
             return builder.ToString();
