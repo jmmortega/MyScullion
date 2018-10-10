@@ -5,6 +5,7 @@ using MyScullion.Services;
 using MyScullion.Services.Databases;
 using MyScullion.Services.Databases.LiteDB;
 using MyScullion.Services.Databases.MonkeyCache;
+using MyScullion.Services.Databases.OrmSqlite;
 using MyScullion.Services.Databases.RawJson;
 using MyScullion.Services.Databases.Realm;
 
@@ -41,7 +42,12 @@ namespace MyScullion.Services
                 {
                     Id = 50,
                     Title = "Realm"
-                }
+                },
+                new MasterDetailPageMenuItem(typeof(OrmSqliteService))
+                {
+                    Id = 60,
+                    Title = "OrmSqlite"
+                },
                 new SeparatorMasterDetail(),
 
                 new MasterDetailPageMenuItem(typeof(TestView))

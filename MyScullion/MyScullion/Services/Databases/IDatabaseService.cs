@@ -8,15 +8,15 @@ namespace MyScullion.Services.Databases
 {
     public interface IDatabaseService
     {
-        Task<IEnumerable<T>> GetAll<T>() where T : BaseModel;
+        Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new();
 
-        IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel;
+        IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new();
 
-        T Get<T>(int id) where T : BaseModel;
+        Task<T> Get<T>(int id) where T : BaseModel, new();
 
-        void Insert<T>(T item) where T : BaseModel;
+        Task Insert<T>(T item) where T : BaseModel;
 
-        void InsertAll<T>(List<T> items) where T : BaseModel;
+        Task InsertAll<T>(List<T> items) where T : BaseModel;
 
         Task<bool> Delete<T>(T item) where T : BaseModel;
     }
