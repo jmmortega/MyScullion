@@ -5,11 +5,11 @@ namespace MyScullion.Droid.Services
 {
     public class PathService : IPathService
     {
-        public string GetDatabasePath()
+        public string GetDatabasePath(string suffix)
         {
             var databasePath = Path.Combine(
                     System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), 
-                    $"{typeof(App).Namespace}LiteDB");
+                    $"{typeof(App).Namespace}{suffix}");
 
             if(!File.Exists(databasePath))
             {

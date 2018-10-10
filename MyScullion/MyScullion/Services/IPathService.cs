@@ -6,6 +6,6 @@ namespace MyScullion.Services
 {
     public interface IPathService
     {
-        string GetDatabasePath();
+        string GetDatabasePath(string suffix);
     }
 }
