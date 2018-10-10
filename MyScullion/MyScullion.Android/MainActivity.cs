@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using MyScullion.Droid.Services;
 
 namespace MyScullion.Droid
 {
@@ -18,6 +19,8 @@ namespace MyScullion.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(bundle);
+
+            CustomDependencyService.Register<PathService>();
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());

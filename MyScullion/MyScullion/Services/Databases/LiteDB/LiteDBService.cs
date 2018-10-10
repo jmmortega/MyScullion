@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
+using LiteDB;
+using MyScullion.Models;
+using System.Reactive.Linq;
+using System.Reactive.Threading.Tasks;
+using System.Reactive;
+
+namespace MyScullion.Services.Databases.LiteDB
+{
+    public class LiteDBService : IDatabaseService
+    {
+        //TODO: Maybe cache collections from LiteDB.
+
+        private LiteDatabase database;
+
+        public LiteDBService()
+        {
+            database = new LiteDatabase(CustomDependencyService.Get<IPathService>().GetDatabasePath());
+            MapModels();
+        }
+
+        private void MapModels()
+        {
+            var mapper = BsonMapper.Global;
+            mapper.Entity<BaseModel>().Id(x => x.Id);
+        }
+
+        public Task<bool> Delete<T>(T item) where T : BaseModel
+        {            
+            return Task.FromResult(database.Engine.Delete(typeof(T).Name, item.Id));
+        }
+
+        public T Get<T>(int id) where T : BaseModel
+        {
+            var coll = database.GetCollection<T>();
+            return coll.FindById(new BsonValue(id));
+        }
+
+        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel
+        {
+            var coll = database.GetCollection<T>();
+            return Task.FromResult(coll.FindAll());            
+        }
+
+        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
+        {
+            var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
+                .SelectMany(_ =>
+                {
+                    var fetchObs = restAction().ToObservable().Catch<T, Exception>(ex =>
+                    {
+                        return Observable.Return(Unit.Default).SelectMany(x => Observable.Throw<T>(ex));
+                    });
+                    return fetchObs;
+                });
+
+            return fetch;
+        }
+
+        public void Insert<T>(T item) where T : BaseModel
+        {
+            var coll = database.GetCollection<T>();
+
+            var existing = coll.FindById(item.Id);
+
+            if(existing == null)
+            {
+                coll.Insert(item);
+            }
+            else
+            {
+                coll.Update(item);
+            }
+        }
+
+        public void InsertAll<T>(List<T> items) where T : BaseModel
+        {
+            var coll = database.GetCollection<T>();
+
+            coll.Insert(items);
+        }
+    }
+}

@@ -76,7 +76,7 @@ namespace MyScullion.Maintanance
                 measures.Add(new Measure()
                 {
                     IngredientId = int.Parse(reader.GetString(0)),
-                    MeasureId = int.Parse(reader.GetString(1)),
+                    Id = int.Parse(reader.GetString(1)),
                     Amount = double.Parse(reader.GetValue(2).ToString()),
                     Description = reader.GetString(3),
                     Grams = reader.GetDouble(4)
