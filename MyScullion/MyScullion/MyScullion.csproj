@@ -62,8 +62,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\Databases\RawSqlite\" />
-  </ItemGroup>
 </Project>

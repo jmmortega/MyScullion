@@ -14,10 +14,10 @@ namespace MyScullion.Services.Databases
 
         Task<T> Get<T>(int id) where T : BaseModel, new();
 
-        Task Insert<T>(T item) where T : BaseModel;
+        Task Insert<T>(T item) where T : BaseModel, new();
 
-        Task InsertAll<T>(List<T> items) where T : BaseModel;
+        Task InsertAll<T>(List<T> items) where T : BaseModel, new();
 
-        Task<bool> Delete<T>(T item) where T : BaseModel;
+        Task<bool> Delete<T>(T item) where T : BaseModel, new();
     }
 }

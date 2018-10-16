@@ -81,6 +81,7 @@
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\PathService.cs" />
+    <Compile Include="Services\RawSQLiteService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -113,6 +114,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\MyScullion.Models\MyScullion.Models.csproj">
+      <Project>{88FDD4E2-B71F-425C-A8A3-BC7BCEDAEB3E}</Project>
+      <Name>MyScullion.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyScullion\MyScullion.csproj">
       <Project>{B8D89889-11BB-4485-8BAA-7E8B26B4C1BF}</Project>
       <Name>MyScullion</Name>

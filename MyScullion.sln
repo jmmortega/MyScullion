@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyScullion", "MyScullion\My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyScullion.Maintanance", "MyScullion.Maintanance\MyScullion.Maintanance.csproj", "{1038C3B0-A8D7-4EAB-A460-AF4FFEAF037E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyScullion.Models", "MyScullion.Models\MyScullion.Models.csproj", "{88FDD4E2-B71F-425C-A8A3-BC7BCEDAEB3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyScullion.Models", "MyScullion.Models\MyScullion.Models.csproj", "{88FDD4E2-B71F-425C-A8A3-BC7BCEDAEB3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
