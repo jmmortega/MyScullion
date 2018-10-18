@@ -29,24 +29,24 @@ namespace MyScullion.Services.Databases.LiteDB
             mapper.Entity<BaseModel>().Id(x => x.Id);
         }
 
-        public Task<bool> Delete<T>(T item) where T : BaseModel
+        public Task<bool> Delete<T>(T item) where T : BaseModel, new()
         {            
             return Task.FromResult(database.Engine.Delete(typeof(T).Name, item.Id));
         }
 
-        public T Get<T>(int id) where T : BaseModel
+        public Task<T> Get<T>(int id) where T : BaseModel, new()
         {
             var coll = database.GetCollection<T>();
-            return coll.FindById(new BsonValue(id));
+            return Task.FromResult(coll.FindById(new BsonValue(id)));
         }
 
-        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel
+        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
         {
             var coll = database.GetCollection<T>();
             return Task.FromResult(coll.FindAll());            
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
+        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
         {
             var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
                 .SelectMany(_ =>
@@ -61,7 +61,7 @@ namespace MyScullion.Services.Databases.LiteDB
             return fetch;
         }
 
-        public void Insert<T>(T item) where T : BaseModel
+        public Task Insert<T>(T item) where T : BaseModel, new()
         {
             var coll = database.GetCollection<T>();
 
@@ -75,13 +75,32 @@ namespace MyScullion.Services.Databases.LiteDB
             {
                 coll.Update(item);
             }
+
+            return Task.FromResult(Unit.Default);
         }
 
-        public void InsertAll<T>(List<T> items) where T : BaseModel
+        public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {
             var coll = database.GetCollection<T>();
 
             coll.Insert(items);
+
+            return Task.FromResult(Unit.Default);
+        }
+
+        Task<T> IDatabaseService.Get<T>(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IDatabaseService.Insert<T>(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IDatabaseService.InsertAll<T>(List<T> items)
+        {
+            throw new NotImplementedException();
         }
     }
 }

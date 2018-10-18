@@ -19,7 +19,7 @@ namespace MyScullion.Services.Databases.Realm
             database = Realms.Realm.GetInstance(CustomDependencyService.Get<IPathService>().GetDatabasePath("Realm"));            
         }
 
-        public Task<bool> Delete<T>(T item) where T : BaseModel
+        public Task<bool> Delete<T>(T item) where T : BaseModel, new()
         {
             var element = database.Find<WrapRealm<T>>(item.Id);
 
@@ -33,17 +33,17 @@ namespace MyScullion.Services.Databases.Realm
             return Task.FromResult(false);
         }
 
-        public T Get<T>(int id) where T : BaseModel
+        public Task<T> Get<T>(int id) where T : BaseModel, new()
         {
-            return database.Find<WrapRealm<T>>(id).Model;
+            return Task.FromResult(database.Find<WrapRealm<T>>(id).Model);
         }
 
-        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel
+        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
         {            
             return Task.FromResult(database.All<WrapRealm<T>>().ToList().Select(x => x.Model));
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
+        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
         {
             var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
                 .SelectMany(_ =>
@@ -58,17 +58,19 @@ namespace MyScullion.Services.Databases.Realm
             return fetch;
         }
 
-        public void Insert<T>(T item) where T : BaseModel
+        public Task Insert<T>(T item) where T : BaseModel, new()
         {
             database.Add(new WrapRealm<T>(item));
+            return Task.FromResult(Unit.Default);
         }
 
-        public void InsertAll<T>(List<T> items) where T : BaseModel
+        public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {
             foreach(var element in items)
             {
                 Insert(element);
             }
-        }
+            return Task.FromResult(Unit.Default);
+        }                
     }
 }

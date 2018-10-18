@@ -15,6 +15,12 @@ namespace MyScullion.Features.Main
         public MainView()
         {
             InitializeComponent();
+
+            MessagingCenter.Subscribe<MessageCenterChef>(this, nameof(MessageCenterChef), 
+                (chef) =>
+                {
+                    LabelChef.Text = chef.Name;
+                });
         }
     }
 }

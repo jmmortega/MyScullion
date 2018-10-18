@@ -1,7 +1,10 @@
-﻿using MyScullion.Services;
+﻿using MyScullion.Models;
+using MyScullion.Services;
 using MyScullion.Services.Databases;
+using MyScullion.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -37,12 +40,27 @@ namespace MyScullion.Features.Test
 
         private void InsertMeasuresClicked(object sender, ItemTappedEventArgs args)
         {
-
+            var data = fileEmbeddedService.GetFile("measures.csv");
         }
 
-        private void InsertRandomTest(object sender, ItemTappedEventArgs args)
+        private async void InsertRandomTest(object sender, ItemTappedEventArgs args)
         {
+            var rows = 0;
+            int.TryParse(EntryRows.Text, out rows);
+
+            var randomData = randomService.CreateRandomData(rows);
             
+            Log.Start($"RandomData{databaseService.GetType().Name}");
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            await databaseService.InsertAll<RandomModel>(randomData);
+
+            stopWatch.Stop();
+            
+            LabelTimeWorking.Text = TimeSpan.FromMilliseconds(stopWatch.ElapsedMilliseconds).ToString();
+
+            Log.Stop($"RandomData{databaseService.GetType().Name}");
         }
 
     }

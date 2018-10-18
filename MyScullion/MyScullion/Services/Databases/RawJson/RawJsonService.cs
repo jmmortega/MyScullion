@@ -23,7 +23,7 @@ namespace MyScullion.Services.Databases.RawJson
             pathService = CustomDependencyService.Get<IPathService>();
         }
 
-        public Task<bool> Delete<T>(T item) where T : BaseModel
+        public Task<bool> Delete<T>(T item) where T : BaseModel, new()
         {
             var collection = (List<T>)GetCollection(typeof(T));
 
@@ -41,24 +41,24 @@ namespace MyScullion.Services.Databases.RawJson
             return Task.FromResult(false);
         }
 
-        public T Get<T>(int id) where T : BaseModel
+        public Task<T> Get<T>(int id) where T : BaseModel, new()
         {
             var collection = (List<T>)GetCollection(typeof(T));
 
             if(collection != null)
             {
-                return collection.FirstOrDefault(x => x.Id == id);
+                return Task.FromResult(collection.FirstOrDefault(x => x.Id == id));
             }
 
             return null;
         }
 
-        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel
+        public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
         {
             return Task.FromResult((IEnumerable<T>)GetCollection(typeof(T)));
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
+        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
         {
             var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
                 .SelectMany(_ =>
@@ -74,22 +74,26 @@ namespace MyScullion.Services.Databases.RawJson
             return fetch;
         }
 
-        public void Insert<T>(T item) where T : BaseModel
+        public Task Insert<T>(T item) where T : BaseModel, new()
         {
             var collection = (List<T>)GetCollection(typeof(T));
 
             collection.Add(item);
 
             Write(PathJson(typeof(T)), JsonConvert.SerializeObject(collection));
+
+            return Task.FromResult(Unit.Default);
         }
 
-        public void InsertAll<T>(List<T> items) where T : BaseModel
+        public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {
             var collection = (List<T>)GetCollection(typeof(T));
 
             collection.AddRange(items);
 
             Write(PathJson(typeof(T)), JsonConvert.SerializeObject(collection));
+
+            return Task.FromResult(Unit.Default);
         }
 
         private void Store(Type type, object collection)
@@ -152,6 +156,6 @@ namespace MyScullion.Services.Databases.RawJson
                     writer.WriteAsync(content);
                 }
             }
-        }
+        }        
     }
 }

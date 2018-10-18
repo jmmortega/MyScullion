@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyScullion.Models;
+using System.Reactive;
 
 namespace MyScullion.Services.Databases
 {
@@ -18,35 +19,37 @@ namespace MyScullion.Services.Databases
             localBlobCache = BlobCache.LocalMachine;
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>() where T : BaseModel
+        public async Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
         {
             return await localBlobCache.GetAllObjects<T>();
         }
 
-        public T Get<T>(int id) where T : BaseModel
+        public Task<T> Get<T>(int id) where T : BaseModel, new()
         {
-            return localBlobCache.GetObject<T>(typeof(T).Name).FirstOrDefault(x => x.Id == id);
+            return Task.FromResult(localBlobCache.GetObject<T>(typeof(T).Name).FirstOrDefault(x => x.Id == id));
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel
+        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
         {
             return localBlobCache.GetAndFetchLatest(typeof(T).Name, restAction);                    
         }
 
-        public void Insert<T>(T item) where T : BaseModel
+        public Task Insert<T>(T item) where T : BaseModel, new()
         {
             localBlobCache.InsertObject<T>(typeof(T).Name, item);
+            return Task.FromResult(Unit.Default);
         }
 
-        public void InsertAll<T>(List<T> items) where T : BaseModel
+        public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {
             foreach(var item in items)
             {
                 Insert(item);
             }
+            return Task.FromResult(Unit.Default);
         }
 
-        public async Task<bool> Delete<T>(T item) where T : BaseModel
+        public async Task<bool> Delete<T>(T item) where T : BaseModel, new()
         {
             var collection = (await GetAll<T>()).ToList();
 
@@ -61,7 +64,6 @@ namespace MyScullion.Services.Databases
             
             return false;
         }
-
-
+        
     }
 }

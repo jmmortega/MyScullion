@@ -4,6 +4,10 @@
              x:Class="MyScullion.Features.Test.TestView">
     <ContentPage.Content>
         <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label x:Name="LabelTimeWorking"/>
+            </StackLayout>
+            
             <Button Text="Insert ingredients" Clicked="InsertIngredientsClicked"/>
             <Button Text="Insert measures" Clicked="InsertMeasuresClicked"/>
             

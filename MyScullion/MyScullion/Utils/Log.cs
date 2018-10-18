@@ -21,8 +21,9 @@ namespace MyScullion.Utils
                 Clear(eventName);
             }
 
-            logEvent = new LogEvent();
+            logEvent = new LogEvent() { EventName = eventName };
             logEvent.TagTime.Add(new Tuple<string, long>("Start", System.Environment.TickCount));
+            logEvents.Add(logEvent);
         }
 
         public static void Track(string eventName, string tag)

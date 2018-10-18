@@ -29,8 +29,14 @@ namespace MyScullion
         }
 
         public static T Get<T>()
-        {
+        {           
             var implementationType = typeof(T).GetInterfaces().FirstOrDefault();
+
+            if(typeof(T).IsInterface)
+            {
+                implementationType = typeof(T);
+            }
+
             if (instances.ContainsKey(implementationType))
             {
                 return (T)instances[implementationType];

@@ -53,6 +53,7 @@ namespace MyScullion.Features.Main
                 if(menuItem.TargetType.GetInterfaces().First() == typeof(IDatabaseService))
                 {
                     ChangeDatabaseServiceType(menuItem.TargetType);
+                    MessagingCenter.Send<MessageCenterChef>(new MessageCenterChef() { Name = $"The chef is {menuItem.TargetType.Name}" }, nameof(MessageCenterChef));                    
                 }
                 else if(menuItem.TargetType.BaseType == typeof(ContentPage))
                 {

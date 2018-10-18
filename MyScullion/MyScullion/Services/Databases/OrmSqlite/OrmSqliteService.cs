@@ -20,7 +20,7 @@ namespace MyScullion.Services.Databases.OrmSqlite
                                                            SQLiteOpenFlags.FullMutex);                                
         }
 
-        public async Task<bool> Delete<T>(T item) where T : BaseModel
+        public async Task<bool> Delete<T>(T item) where T : BaseModel, new()
         {
             return await connection.DeleteAsync(item) > 0;
         }
@@ -50,13 +50,13 @@ namespace MyScullion.Services.Databases.OrmSqlite
             return fetch;
         }
 
-        public Task Insert<T>(T item) where T : BaseModel
+        public Task Insert<T>(T item) where T : BaseModel, new()
         {
             connection.InsertAsync(item);
             return Task.FromResult(Unit.Default);
         }
 
-        public Task InsertAll<T>(List<T> items) where T : BaseModel
+        public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {
             connection.InsertAllAsync(items);
             return Task.FromResult(Unit.Default);
