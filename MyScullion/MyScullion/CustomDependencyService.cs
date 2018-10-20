@@ -23,10 +23,30 @@ namespace MyScullion
             }
         }
 
+        public static void Register(Type type, Type typeImplementation)
+        {
+            var instance = Activator.CreateInstance(typeImplementation);
+            
+            if(instances.ContainsKey(typeImplementation))
+            {
+                instances[type] = instance;
+            }
+            else
+            {
+                instances.Add(type, instance);
+            }
+        }
+
         public static void Register<T>()
         {
             Register(typeof(T));
         }
+
+        public static void Register<T, TI>()
+        {
+            Register(typeof(T), typeof(TI));
+        }
+            
 
         public static T Get<T>()
         {           

@@ -7,18 +7,28 @@ using Mono.Data.Sqlite;
 using MyScullion.Models;
 using MyScullion.Services.Databases;
 using MyScullion.Services.Databases.RawSqlite;
+using MyScullion.Services;
+using System.IO;
 
 namespace MyScullion.Droid.Services
 {
-    public class RawSQLiteService : DatabaseBase, IDatabaseService
+    public class RawSQLitePlatformService : DatabaseBase, IRawSQLitePlatformService
     {
         private List<Type> tables = new List<Type>();
 
-        public RawSQLiteService()
-        {            
+        public RawSQLitePlatformService()
+        {
+            var path = CustomDependencyService.Get<IPathService>().GetDatabasePath("RawSqlite");
+            if(!File.Exists(path))
+            {
+                SqliteConnection.CreateFile(path);
+            }
+            
+            base.ApplySerialized();
+            Connection = new SqliteConnection($"Data Source={path};Version=3;PRAGMA journal_mode=WAL;PRAGMA cache_size=1;PRAGMA synchronous=1;PRAGMA locking_mode=EXCLUSIVE");
         }
         
-        public new Task<bool> Delete<T>(T item) where T : BaseModel, new()
+        public Task<bool> Delete<T>(T item) where T : BaseModel, new()
         {
             CheckTable<T>();
             
@@ -64,7 +74,7 @@ namespace MyScullion.Droid.Services
 
             try
             {
-                myCollection = base.Select<T>($"SELECT {ExtensionMethodsSQLiteRaw.PrepareFieldsToSelectOrInsert<T>()} FROM {typeof(T).Name} WHERE Id = @Id",
+                myCollection = base.Select<T>($"SELECT {ExtensionMethodsSQLiteRaw.PrepareFieldsToSelectOrInsert<T>()} FROM {typeof(T).Name}",
                     ExtensionMethodsSQLiteRaw.SerializeCollection<T>);                                
             }
             catch (Exception e)
@@ -84,6 +94,7 @@ namespace MyScullion.Droid.Services
         {
             try
             {
+                CheckTable<T>();
                 base.Insert(ExtensionMethodsSQLiteRaw.ToInsertQuery<T>(), item.GetParameters<T>());                                
             }
             catch(Exception e)
@@ -94,10 +105,11 @@ namespace MyScullion.Droid.Services
             return Task.FromResult(Unit.Default);
         }
 
-        public new Task InsertAll<T>(List<T> items) where T : MyScullion.Models.BaseModel, new()
+        public Task InsertAll<T>(List<T> items) where T : MyScullion.Models.BaseModel, new()
         {
             try
             {
+                CheckTable<T>();
                 base.InsertAll(ExtensionMethodsSQLiteRaw.ToInsertQuery<T>(), items.Select(x => x.GetParameters<T>()).ToList());
             }
             catch(Exception e)

@@ -81,6 +81,7 @@ namespace MyScullion.iOS.Services
         
         protected List<TModel> Select<TModel>(string sql, Func<object, List<TModel>> serializeAction) 
         {
+            Connection.Open();
             var com = PrepareCommand(sql);
             var reader = com.ExecuteReader();
             com.Dispose();
@@ -88,11 +89,13 @@ namespace MyScullion.iOS.Services
             var list = serializeAction.Invoke(reader);
             reader.Close();
             reader.Dispose();
+            Connection.Close();
             return list;
         }
         
         protected List<TModel> Select<TModel>(string sql, List<object> parameters, Func<object, List<TModel>> serializeAction) 
         {
+            Connection.Open();
             var com = PrepareCommand(sql, parameters.Select(x => (SqliteParameter)x).ToList());
             var reader = com.ExecuteReader();
             com.Dispose();
@@ -100,6 +103,7 @@ namespace MyScullion.iOS.Services
             var list = serializeAction.Invoke(reader);
             reader.Close();
             reader.Dispose();
+            Connection.Close();
             return list;
         }
         
@@ -131,7 +135,8 @@ namespace MyScullion.iOS.Services
         }
 
         public void InsertAll(string sql, List<List<object>> parameters)
-        {            
+        {
+            Connection.Open();
             var command = _con.CreateCommand();
             var transaction = _con.BeginTransaction();
             command.CommandText = sql;
@@ -155,6 +160,7 @@ namespace MyScullion.iOS.Services
             finally
             {
                 command.Dispose();
+                Connection.Close();
             }            
         }
 
@@ -188,7 +194,8 @@ namespace MyScullion.iOS.Services
         }
 
         private void DoTransaction(string sql, List<object> parameters)
-        {            
+        {
+            Connection.Open();
             var command = PrepareCommand(sql, parameters.Select(x => (SqliteParameter)x).ToList());
 
             try
@@ -202,6 +209,7 @@ namespace MyScullion.iOS.Services
             finally
             {
                 command.Dispose();
+                Connection.Close();
             }            
         }
 

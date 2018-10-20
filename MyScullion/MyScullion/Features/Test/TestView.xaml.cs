@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,34 +35,99 @@ namespace MyScullion.Features.Test
 
         private void InsertIngredientsClicked(object sender, ItemTappedEventArgs args)
         {
-            var data = fileEmbeddedService.GetFile("ingredients.csv");
-            
+            var data = fileEmbeddedService.GetFile("ingredients.csv")
+                            .Select(x => new Ingredient(x)).ToList();
+            InsertAll<Ingredient>(data);
+        }
+
+        private void GetIngredientsClicked(object sender, EventArgs e)
+        {
+            GetAll<Ingredient>();
         }
 
         private void InsertMeasuresClicked(object sender, ItemTappedEventArgs args)
         {
-            var data = fileEmbeddedService.GetFile("measures.csv");
+            var data = fileEmbeddedService.GetFile("measures.csv")
+                            .Select(x => new Measure(x)).ToList();
+            InsertAll<Measure>(data);
         }
 
-        private async void InsertRandomTest(object sender, ItemTappedEventArgs args)
+        private void GetMeasuresClicked(object sender, EventArgs e)
+        {
+            GetAll<Measure>();
+        }
+
+        private void InsertRandomTest(object sender, ItemTappedEventArgs args)
         {
             var rows = 0;
             int.TryParse(EntryRows.Text, out rows);
 
-            var randomData = randomService.CreateRandomData(rows);
+            var randomData = randomService.CreateRandomData(rows);            
+            InsertAll<RandomModel>(randomData);
             
-            Log.Start($"RandomData{databaseService.GetType().Name}");
+        }
+
+        private void GetRandomData(object sender, EventArgs e)
+        {
+            GetAll<RandomModel>();
+        }
+        
+        private async void InsertAll<T>(List<T> data) where T : BaseModel, new()
+        {
+            Log.Start($"InsertRandomData{databaseService.GetType().Name}");
+            var stopWatch = new Stopwatch();            
+            stopWatch.Start();            
+            await databaseService.InsertAll<T>(data);            
+            stopWatch.Stop();            
+            LabelTimeWorking.Text = TimeSpan.FromMilliseconds(stopWatch.ElapsedMilliseconds).ToString();
+
+            Log.Stop($"InsertRandomData{databaseService.GetType().Name}");
+        }
+        
+        private async void GetAll<T>() where T : BaseModel, new()
+        {
+            Log.Start($"InsertRandomData{databaseService.GetType().Name}");
             var stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            await databaseService.InsertAll<RandomModel>(randomData);
-
+            GridWaiting.IsVisible = true;
+            await databaseService.GetAll<T>();
+            GridWaiting.IsVisible = false;
             stopWatch.Stop();
-            
+
             LabelTimeWorking.Text = TimeSpan.FromMilliseconds(stopWatch.ElapsedMilliseconds).ToString();
 
-            Log.Stop($"RandomData{databaseService.GetType().Name}");
+            Log.Stop($"InsertRandomData{databaseService.GetType().Name}");
         }
 
+        private Task ShowBusy()
+        {
+            var contentView = (Layout<View>)Content;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                var busyView = new BusyView();
+                busyView.WidthRequest = this.Width;
+                busyView.HeightRequest = this.Height;
+                contentView.Children.Add(busyView);
+            });
+
+            return Task.FromResult(Unit.Default);
+        }
+
+        private Task RemoveBusy()
+        {
+            var contentView = (Layout<View>)Content;
+            if (contentView != null)
+            {
+                var busyViews = contentView.Children.Where(x => x.GetType() == typeof(BusyView)).ToList();
+
+                foreach (var busyView in busyViews)
+                {
+                    contentView.Children.Remove(busyView);
+                }
+            }
+
+            return Task.FromResult(Unit.Default);
+        }        
     }
 }

@@ -7,6 +7,7 @@ using MyScullion.Services.Databases.LiteDB;
 using MyScullion.Services.Databases.MonkeyCache;
 using MyScullion.Services.Databases.OrmSqlite;
 using MyScullion.Services.Databases.RawJson;
+using MyScullion.Services.Databases.RawSqlite;
 using MyScullion.Services.Databases.Realm;
 
 [assembly: Xamarin.Forms.Dependency(typeof(MenuService))]
@@ -47,6 +48,11 @@ namespace MyScullion.Services
                 {
                     Id = 60,
                     Title = "OrmSqlite"
+                },
+                new MasterDetailPageMenuItem(typeof(RawSQLiteService))
+                {
+                    Id = 70,
+                    Title = "RawSQLite"
                 },
                 new SeparatorMasterDetail(),
 

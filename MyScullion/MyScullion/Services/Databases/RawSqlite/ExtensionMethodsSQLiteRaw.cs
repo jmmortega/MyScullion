@@ -16,7 +16,7 @@ namespace MyScullion.Services.Databases.RawSqlite
             
             var secondPart = string.Join(",", PrepareFieldsToCreate(model));
 
-            return $"{firstPart} {secondPart}";
+            return $"{firstPart} ({secondPart})";
         }
 
         private static List<string> PrepareFieldsToCreate(BaseModel model)
@@ -29,9 +29,9 @@ namespace MyScullion.Services.Databases.RawSqlite
 
             foreach (var property in properties)
             {
-                var field = $"[{property.Name}] {property.DeclaringType.ToString()}";
+                var field = $"[{property.Name}] {property.PropertyType.Name}";
                 //Check it's null or not null to create de query for create table more correctly
-                if(Nullable.GetUnderlyingType(property.DeclaringType) != null)
+                if(Nullable.GetUnderlyingType(property.PropertyType) != null)
                 {
                     field += " NULL";
                 }

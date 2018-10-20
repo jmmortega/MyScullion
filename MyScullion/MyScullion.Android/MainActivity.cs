@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using MyScullion.Droid.Services;
+using MyScullion.Services.Databases.RawSqlite;
 
 namespace MyScullion.Droid
 {
@@ -21,6 +22,7 @@ namespace MyScullion.Droid
             base.OnCreate(bundle);
 
             CustomDependencyService.Register<PathService>();
+            CustomDependencyService.Register<IRawSQLitePlatformService, RawSQLitePlatformService>();
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());

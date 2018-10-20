@@ -41,9 +41,10 @@ namespace MyScullion.Services.Databases.LiteDB
         }
 
         public Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new()
-        {
+        {            
             var coll = database.GetCollection<T>();
-            return Task.FromResult(coll.FindAll());            
+            var collF = coll.FindAll();
+            return Task.FromResult(collF);            
         }
 
         public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
@@ -88,19 +89,6 @@ namespace MyScullion.Services.Databases.LiteDB
             return Task.FromResult(Unit.Default);
         }
 
-        Task<T> IDatabaseService.Get<T>(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IDatabaseService.Insert<T>(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IDatabaseService.InsertAll<T>(List<T> items)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

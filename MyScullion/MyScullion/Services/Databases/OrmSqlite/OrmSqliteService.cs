@@ -16,8 +16,16 @@ namespace MyScullion.Services.Databases.OrmSqlite
 
         public OrmSqliteService()
         {
-            connection = new SQLite.SQLiteAsyncConnection(CustomDependencyService.Get<IPathService>().GetDatabasePath("Sqlite"),
-                                                           SQLiteOpenFlags.FullMutex);                                
+            connection = new SQLite.SQLiteAsyncConnection(CustomDependencyService.Get<IPathService>().GetDatabasePath("sqlite.db"));
+
+            CreateTables();
+        }
+
+        private void CreateTables()
+        {
+            connection.CreateTableAsync<RandomModel>();
+            connection.CreateTableAsync<Ingredient>();
+            connection.CreateTableAsync<Measure>();
         }
 
         public async Task<bool> Delete<T>(T item) where T : BaseModel, new()
@@ -50,16 +58,14 @@ namespace MyScullion.Services.Databases.OrmSqlite
             return fetch;
         }
 
-        public Task Insert<T>(T item) where T : BaseModel, new()
+        public async Task Insert<T>(T item) where T : BaseModel, new()
         {
-            connection.InsertAsync(item);
-            return Task.FromResult(Unit.Default);
+            await connection.InsertAsync(item);            
         }
 
-        public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
-        {
-            connection.InsertAllAsync(items);
-            return Task.FromResult(Unit.Default);
+        public async Task InsertAll<T>(List<T> items) where T : BaseModel, new()
+        {            
+            await connection.InsertAllAsync(items);
         }
     }
 }

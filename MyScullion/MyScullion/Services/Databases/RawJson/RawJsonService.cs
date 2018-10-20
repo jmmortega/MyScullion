@@ -77,6 +77,10 @@ namespace MyScullion.Services.Databases.RawJson
         public Task Insert<T>(T item) where T : BaseModel, new()
         {
             var collection = (List<T>)GetCollection(typeof(T));
+            if (collection == null)
+            {
+                collection = new List<T>();
+            }
 
             collection.Add(item);
 
@@ -88,6 +92,11 @@ namespace MyScullion.Services.Databases.RawJson
         public Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {
             var collection = (List<T>)GetCollection(typeof(T));
+
+            if (collection == null)
+            {
+                collection = new List<T>();
+            }
 
             collection.AddRange(items);
 
@@ -130,32 +139,29 @@ namespace MyScullion.Services.Databases.RawJson
             return null;
         }
 
-        private string PathJson(Type type) => pathService.GetDatabasePath($"Json{type.Name}");
+        private string PathJson(Type type) => pathService.GetDatabasePath($"Json{type.Name}.json");
 
         private string ReadFile(string path)
         {
             string content = string.Empty;
+            var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+            var reader = new StreamReader(fileStream);
 
-            using (var fileStream = new IsolatedStorageFileStream(path, FileMode.OpenOrCreate))
-            {
-                using (var reader = new StreamReader(fileStream))
-                {
-                    content = reader.ReadToEnd();
-                }
-            }
-
+            content = reader.ReadToEnd();
+            fileStream.Close();
+            fileStream.Dispose();
+                                        
             return content;            
         }
 
         private void Write(string path, string content)
         {
-            using (var fileStream = new IsolatedStorageFileStream(path, FileMode.OpenOrCreate))
-            {
-                using (var writer = new StreamWriter(fileStream))
-                {
-                    writer.WriteAsync(content);
-                }
-            }
+            var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+            var writer = new StreamWriter(fileStream);
+            writer.Write(content);
+
+            writer.Close();
+            writer.Dispose();
         }        
     }
 }
