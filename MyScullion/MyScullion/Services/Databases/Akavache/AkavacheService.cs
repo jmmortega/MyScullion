@@ -29,11 +29,11 @@ namespace MyScullion.Services.Databases
             return Task.FromResult(localBlobCache.GetObject<T>(typeof(T).Name).FirstOrDefault(x => x.Id == id));
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
+        public IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new()
         {
-            return localBlobCache.GetAndFetchLatest(typeof(T).Name, restAction);                    
+            return localBlobCache.GetAndFetchLatest(typeof(T).Name, restAction);
         }
-
+        
         public Task Insert<T>(T item) where T : BaseModel, new()
         {
             localBlobCache.InsertObject<T>(typeof(T).Name, item);
@@ -63,7 +63,6 @@ namespace MyScullion.Services.Databases
             }
             
             return false;
-        }
-        
+        }        
     }
 }

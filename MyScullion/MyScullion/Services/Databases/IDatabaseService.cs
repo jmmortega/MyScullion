@@ -10,7 +10,7 @@ namespace MyScullion.Services.Databases
     {
         Task<IEnumerable<T>> GetAll<T>() where T : BaseModel, new();
 
-        IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new();
+        IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new();
 
         Task<T> Get<T>(int id) where T : BaseModel, new();
 

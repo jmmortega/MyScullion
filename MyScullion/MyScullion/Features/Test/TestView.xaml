@@ -13,6 +13,7 @@
                 <Button Text="Get Ingredients" Clicked="GetIngredientsClicked"/>
                 <Button Text="Insert measures" Clicked="InsertMeasuresClicked"/>
                 <Button Text="Get Measures" Clicked="GetMeasuresClicked"/>
+                <Button Text="Get Measures in Cache and Request More" Clicked="GetMeasuresAndMoreClicked"/>
 
                 <StackLayout Orientation="Horizontal">
                     <Button Text="Insert test" Clicked="InsertRandomTest"/>
@@ -20,6 +21,8 @@
                 </StackLayout>
 
                 <Button Text="Get All" Clicked="GetRandomData"/>
+
+                <Button Text="Get All in Cache and Request More" Clicked="GetAllAndMoreClicked"/>
             </StackLayout>
 
             <Grid x:Name="GridWaiting" BackgroundColor="White" Opacity="0.5" IsVisible="False"/>

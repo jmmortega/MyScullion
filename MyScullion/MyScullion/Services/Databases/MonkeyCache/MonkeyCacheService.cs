@@ -45,21 +45,9 @@ namespace MyScullion.Services.Databases.MonkeyCache
             return Task.FromResult(Barrel.Current.Get<IEnumerable<T>>(typeof(T).Name));
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
-        {            
-            var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
-                .SelectMany(_ =>
-                {
-                    var fetchObs = restAction().ToObservable().Catch<T, Exception>(ex =>
-                    {
-                        return Observable.Return(Unit.Default).SelectMany(x => Observable.Throw<T>(ex));                        
-                    });
-
-
-                    return fetchObs;                                                
-                });
-
-            return fetch;                        
+        public IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new()
+        {
+            return DatabaseUtils.PrepareGetAndFetch<T>(GetAll<T>, restAction);
         }
 
         public Task Insert<T>(T item) where T : BaseModel, new()

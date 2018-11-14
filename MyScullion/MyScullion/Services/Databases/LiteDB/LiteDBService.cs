@@ -8,13 +8,12 @@ using MyScullion.Models;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Reactive;
+using System.Reactive.Subjects;
 
 namespace MyScullion.Services.Databases.LiteDB
 {
     public class LiteDBService : IDatabaseService
-    {
-        //TODO: Maybe cache collections from LiteDB.
-
+    {        
         private LiteDatabase database;
 
         public LiteDBService()
@@ -46,22 +45,12 @@ namespace MyScullion.Services.Databases.LiteDB
             var collF = coll.FindAll();
             return Task.FromResult(collF);            
         }
-
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
+        
+        public IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new()
         {
-            var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
-                .SelectMany(_ =>
-                {
-                    var fetchObs = restAction().ToObservable().Catch<T, Exception>(ex =>
-                    {
-                        return Observable.Return(Unit.Default).SelectMany(x => Observable.Throw<T>(ex));
-                    });
-                    return fetchObs;
-                });
-
-            return fetch;
+            return DatabaseUtils.PrepareGetAndFetch<T>(GetAll<T>, restAction);              
         }
-
+        
         public Task Insert<T>(T item) where T : BaseModel, new()
         {
             var coll = database.GetCollection<T>();
@@ -87,8 +76,6 @@ namespace MyScullion.Services.Databases.LiteDB
             coll.Insert(items);
 
             return Task.FromResult(Unit.Default);
-        }
-
-        
+        }        
     }
 }

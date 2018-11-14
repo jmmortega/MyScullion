@@ -43,19 +43,9 @@ namespace MyScullion.Services.Databases.OrmSqlite
             return await connection.Table<T>().ToListAsync();
         }
 
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
+        public IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new()
         {
-            var fetch = Observable.Defer(() => GetAll<T>().ToObservable())
-                .SelectMany(_ =>
-                {
-                    var fetchObs = restAction().ToObservable().Catch<T, Exception>(ex =>
-                    {
-                        return Observable.Return(Unit.Default).SelectMany(x => Observable.Throw<T>(ex));
-                    });
-                    return fetchObs;
-                });
-
-            return fetch;
+            return DatabaseUtils.PrepareGetAndFetch<T>(GetAll<T>, restAction);
         }
 
         public async Task Insert<T>(T item) where T : BaseModel, new()
@@ -66,6 +56,6 @@ namespace MyScullion.Services.Databases.OrmSqlite
         public async Task InsertAll<T>(List<T> items) where T : BaseModel, new()
         {            
             await connection.InsertAllAsync(items);
-        }
+        }        
     }
 }

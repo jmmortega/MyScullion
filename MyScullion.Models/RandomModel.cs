@@ -15,5 +15,10 @@ namespace MyScullion.Models
         public double Price { get; set; }
 
         public DateTime CreateDate { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name} {Description}";
+        }
     }
 }

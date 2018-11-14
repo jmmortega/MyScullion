@@ -84,10 +84,10 @@ namespace MyScullion.Droid.Services
 
             return Task.FromResult<IEnumerable<T>>(myCollection);
         }
-
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : MyScullion.Models.BaseModel, new()
+        
+        public IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new()
         {
-            throw new NotImplementedException();
+            return DatabaseUtils.PrepareGetAndFetch(GetAll<T>, restAction);
         }
 
         public Task Insert<T>(T item) where T : MyScullion.Models.BaseModel, new()

@@ -29,11 +29,12 @@ namespace MyScullion.Services.Databases.RawSqlite
         {
             return platformService.GetAll<T>();
         }
-
-        public IObservable<T> GetAndFetch<T>(Func<Task<T>> restAction) where T : BaseModel, new()
+        
+        public IObservable<IEnumerable<T>> GetAndFetch<T>(Func<Task<IEnumerable<T>>> restAction) where T : BaseModel, new()
         {
-            return platformService.GetAndFetch<T>(restAction);
+            return DatabaseUtils.PrepareGetAndFetch<T>(GetAll<T>, restAction);
         }
+    
 
         public Task Insert<T>(T item) where T : BaseModel, new()
         {

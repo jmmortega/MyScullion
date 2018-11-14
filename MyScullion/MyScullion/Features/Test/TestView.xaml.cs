@@ -57,6 +57,22 @@ namespace MyScullion.Features.Test
             GetAll<Measure>();
         }
 
+        private void GetMeasuresAndMoreClicked(object sender, EventArgs e)
+        {
+            GetAllAndFetch<Measure>(() => databaseService.GetAll<Measure>());
+        }
+
+        private void GetAllAndMoreClicked(object sender, EventArgs e)
+        {
+            GetAllAndFetch<RandomModel>(() => databaseService.GetAll<RandomModel>());
+        }
+
+        private async Task<IEnumerable<Measure>> GetMoreMeasures()
+        {
+            await Task.Delay(1000);
+            return await databaseService.GetAll<Measure>();
+        }
+        
         private void InsertRandomTest(object sender, ItemTappedEventArgs args)
         {
             var rows = 0;
@@ -99,6 +115,30 @@ namespace MyScullion.Features.Test
 
             Log.Stop($"InsertRandomData{databaseService.GetType().Name}");
         }
+
+        private async void GetAllAndFetch<T>(Func<Task<IEnumerable<T>>> actionForNewResults) where T : BaseModel, new()
+        {
+            Log.Start($"InsertRandomDataAndFetch{databaseService.GetType().Name}");
+
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            GridWaiting.IsVisible = true;
+            databaseService.GetAndFetch<T>(actionForNewResults).Subscribe(values =>
+            {
+                System.Diagnostics.Debug.WriteLine($"Values arrive: {values.Count()} First value {values.First().ToString()}");
+            });
+
+            GridWaiting.IsVisible = false;
+
+            stopWatch.Stop();
+
+            LabelTimeWorking.Text = TimeSpan.FromMilliseconds(stopWatch.ElapsedMilliseconds).ToString();
+
+            Log.Stop($"InsertRandomDataAndFetch{databaseService.GetType().Name}");
+        }
+
+
 
         private Task ShowBusy()
         {
